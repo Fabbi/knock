@@ -98,8 +98,8 @@
           name = "gourou";
           src = "${gourou-src}";
 
-          patchPhase = ''
-            rm -f src/pugixml.cpp
+          postPatch = "rm -f src/pugixml.cpp";
+          patchPhase = optionalString (stdenv.isDarwin) ''
             rm -f src/device.cpp
             cp ${packages.knock.src}/patches/gourou/device.cpp src/device.cpp
           '';
