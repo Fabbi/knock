@@ -16,6 +16,21 @@
         "url": "https://gist.github.com/f0fd86b6c73063283afe550bc5d77594.git"
       }
     },
+    "flake-utils": {
+      "locked": {
+        "lastModified": 1653893745,
+        "narHash": "sha256-0jntwV3Z8//YwuOjzhV2sgJJPt+HY6KhU7VZUL0fKZQ=",
+        "owner": "numtide",
+        "repo": "flake-utils",
+        "rev": "1ed9fb1935d260de5fe1c2f7ee0ebaae17ed2fa1",
+        "type": "github"
+      },
+      "original": {
+        "owner": "numtide",
+        "repo": "flake-utils",
+        "type": "github"
+      }
+    },
     "gourou-src": {
       "flake": false,
       "locked": {
@@ -34,16 +49,15 @@
     },
     "nixpkgs": {
       "locked": {
-        "lastModified": 1654230545,
-        "narHash": "sha256-8Vlwf0x8ow6pPOK2a04bT+pxIeRnM1+O0Xv9/CuDzRs=",
+        "lastModified": 1656006128,
+        "narHash": "sha256-CnKiuYAZ2GhTODua740NR5i4zSjtgPbDidZR1/hBynY=",
         "owner": "NixOS",
         "repo": "nixpkgs",
-        "rev": "236cc2971ac72acd90f0ae3a797f9f83098b17ec",
+        "rev": "3d54f15c00a96578befbcfb4b32094f2a38cfbdb",
         "type": "github"
       },
       "original": {
         "owner": "NixOS",
-        "ref": "nixos-unstable",
         "repo": "nixpkgs",
         "type": "github"
       }
@@ -68,6 +82,7 @@
     "root": {
       "inputs": {
         "base64-src": "base64-src",
+        "flake-utils": "flake-utils",
         "gourou-src": "gourou-src",
         "nixpkgs": "nixpkgs",
         "pugixml-src": "pugixml-src",
