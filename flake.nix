@@ -149,7 +149,7 @@
 
           buildPhase = ''
             ${cc} \
-              -o $name \
+              -o knock \
               src/knock.cpp \
               -D KNOCK_VERSION='"${version}"' \
               --std=c++17 \
@@ -171,9 +171,9 @@
               -lcrypto \
               -lcurl \
               -lssl \
-              ${packages.utils-common}/lib/libutils-common.a \
-              ${packages.gourou}/lib/libgourou.a \
-              ${packages.updfparser}/lib/libupdfparser.a \
+              ${packages.utils-common}/lib/lib${packages.utils-common.name}.a \
+              ${packages.gourou}/lib/lib${packages.gourou.name}.a \
+              ${packages.updfparser}/lib/lib${packages.updfparser.name}.a \
               -L${packages.libzip-static}/lib \
               -L${nixpkgs-stat.libnghttp2}/lib \
               -L${nixpkgs-stat.libidn2.out}/lib \
