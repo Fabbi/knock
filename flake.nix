@@ -31,9 +31,7 @@
 
     eachSystem systems (system:
     let
-      nixpkgs-dyn = import nixpkgs {
-        inherit system;
-      };
+      nixpkgs-dyn = nixpkgs.legacyPackages.${system}
       nixpkgs-stat = nixpkgs-dyn.pkgsStatic;
       stdenv = nixpkgs-stat.stdenv;
       cc = "${stdenv.cc}/bin/${stdenv.cc.targetPrefix}c++";
