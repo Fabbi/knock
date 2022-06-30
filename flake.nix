@@ -27,8 +27,6 @@
       systems = [ "aarch64-linux" "x86_64-linux" "aarch64-darwin" "x86_64-darwin" ];
       eachSystem = flake-utils.lib.eachSystem;
       obj-flags = "-O2 -static";
-      optional = nixpkgs.lib.optional;
-      optionalString = nixpkgs.lib.optionalString;
     in
 
     eachSystem systems (system:
@@ -100,11 +98,7 @@
 
           postPatch = "rm -f src/pugixml.cpp";
 
-          patchPhase = optionalString (stdenv.isDarwin) ''
-            rm -f src/device.cpp
-            cp ${packages.knock.src}/patches/gourou/device.cpp src/device.cpp
-            runHook postPatch
-          '';
+          patches = [ ./patches/gourou/0001-Update-get_mac_address-to-support-darwin.patch ];
 
           buildPhase = ''
             mkdir -p $out
