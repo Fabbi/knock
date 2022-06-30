@@ -200,15 +200,14 @@
           '';
         };
 
-        test = nixpkgs-stat.writeShellSCriptBin "test" ''
-          ${nixpkgs-dyn.black}/bin/black ./tests
-        '';
-
-        formatter = nixpkgs-stat.writeShellScriptBin "formatter" ''
+        formatter = nixpkgs-stat.writeShellScriptBin "formatter" (''
           set -x
           ${nixpkgs-dyn.clang-tools}/bin/clang-format -i --verbose ./src/*.cpp
           ${nixpkgs-dyn.nixpkgs-fmt}/bin/nixpkgs-fmt .
-        '';
+        ''
+        + nixpkgs.lib.optionalString (! (stdenv.isDarwin && stdenv.isAarch64)) ''
+          ${nixpkgs-dyn.black}/bin/black ./tests
+        ''); # pyopenssl is broken for Darwin && Aarch64
       };
 
       defaultPackage = packages.knock;
