@@ -75,7 +75,6 @@
         };
 
         updfparser = mkDerivation {
-          inherit installPhase;
           name = "updfparser";
           src = "${updfparser-src}";
 
@@ -86,11 +85,11 @@
               ${obj-flags}
             ${ar} crs lib$name.a *.o
           '';
+          inherit installPhase;
 
         };
 
         gourou = mkDerivation {
-          inherit installPhase;
           name = "gourou";
           src = "${gourou-src}";
 
@@ -111,10 +110,10 @@
               ${obj-flags}
             ${ar} crs lib$name.a *.o
           '';
+          inherit installPhase;
         };
 
         utils-common = mkDerivation {
-          inherit installPhase;
           name = "utils-common";
           src = "${gourou-src}";
 
@@ -132,10 +131,10 @@
               ${obj-flags}
             ${ar} crs lib$name.a *.o
           '';
+          inherit installPhase;
         };
 
         knock = mkDerivation {
-          inherit installPhase;
           name = "knock";
           src = ./.;
 
@@ -178,6 +177,7 @@
               -L${nixpkgs-stat.curl.out}/lib \
               ${end-group}
           '';
+          inherit installPhase;
         };
 
         tests = mkDerivation {
