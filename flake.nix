@@ -42,10 +42,10 @@
         find . -type f -maxdepth 1 -name "*.a" -exec install -D {} -t $out/lib \;
         find . -type f -maxdepth 1 -executable -exec install -D {} -t $out/bin \;
       '';
-      start-group = optionalString (stdenv.isLinux)
+      start-group = nixpkgs.lib.optionalString (stdenv.isLinux)
         ''-Wl,--as-needed -static \
           -Wl,--start-group'';
-      end-group = optionalString (stdenv.isLinux)
+      end-group = nixpkgs.lib.optionalString (stdenv.isLinux)
         ''-static-libgcc -static-libstdc++ \
           -Wl,--end-group'';
     in
