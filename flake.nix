@@ -24,28 +24,32 @@
     { nixpkgs, flake-utils, gourou-src, updfparser-src, base64-src, pugixml-src, ... }:
     let
       version = "1.3.0";
+      _ = builtins // nixpkgs.lib;
       systems = [ "aarch64-linux" "x86_64-linux" "aarch64-darwin" "x86_64-darwin" ];
       eachSystem = flake-utils.lib.eachSystem;
       obj-flags = "-O2 -static";
-    in
-
-    eachSystem systems (system:
-    let
-      nixpkgs-dyn = nixpkgs.legacyPackages.${system};
-      nixpkgs-stat = nixpkgs-dyn.pkgsStatic;
-      stdenv = nixpkgs-stat.stdenv;
-      cc = "${stdenv.cc}/bin/${stdenv.cc.targetPrefix}c++";
-      ar = "${stdenv.cc.bintools.bintools_bin}/bin/${stdenv.cc.targetPrefix}ar";
-      mkDerivation = stdenv.mkDerivation;
       installPhase = ''
         mkdir -p $out
         find . -type f -maxdepth 1 -name "*.a" -exec install -D {} -t $out/lib \;
         find . -type f -maxdepth 1 -executable -exec install -D {} -t $out/bin \;
       '';
-      start-group = nixpkgs.lib.optionalString (stdenv.isLinux)
+    in
+
+    eachSystem systems (system:
+    let
+      nixpkgs-dyn = nixpkgs.legacyPackages.${system};
+      nixpkgs-stat = if (!nixpkgs-dyn.stdenv.isDarwin)
+                     then nixpkgs-dyn.pkgsStatic
+                     else (nixpkgs-dyn.callPackage ./static-libs.nix {
+                       nixpkgs = nixpkgs-dyn; });
+      stdenv = nixpkgs-stat.stdenv;
+      cc = "${stdenv.cc}/bin/${stdenv.cc.targetPrefix}c++";
+      ar = "${stdenv.cc.bintools.bintools_bin}/bin/${stdenv.cc.targetPrefix}ar";
+      mkDerivation = stdenv.mkDerivation;
+      start-group = _.optionalString (stdenv.isLinux)
         ''-Wl,--as-needed -static \
           -Wl,--start-group'';
-      end-group = nixpkgs.lib.optionalString (stdenv.isLinux)
+      end-group = _.optionalString (stdenv.isLinux)
         ''-static-libgcc -static-libstdc++ \
           -Wl,--end-group'';
     in
@@ -138,6 +142,15 @@
           name = "knock";
           src = ./.;
 
+          buildInputs = with nixpkgs-stat; [
+            libnghttp2
+            libidn2
+            libunistring
+            libssh2
+            zlib
+            openssl
+            curl
+          ];
           buildPhase = ''
             ${cc} \
               -o knock \
@@ -205,7 +218,7 @@
           ${nixpkgs-dyn.clang-tools}/bin/clang-format -i --verbose ./src/*.cpp
           ${nixpkgs-dyn.nixpkgs-fmt}/bin/nixpkgs-fmt .
         ''
-        + nixpkgs.lib.optionalString (! (stdenv.isDarwin && stdenv.isAarch64)) ''
+        + _.optionalString (! (stdenv.isDarwin && stdenv.isAarch64)) ''
           ${nixpkgs-dyn.black}/bin/black ./tests
         ''); # pyopenssl is broken for Darwin && Aarch64
       };
